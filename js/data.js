@@ -31,6 +31,14 @@ export const sites = [
     video: "assets/portfolio/johny-burger.mp4"
   },
   {
+    nome: "Braseiro Hamburgueria",
+    tipo: "Hamburgueria · Nova Tramandaí-RS",
+    descricao: "Hambúrguer de 11 camadas que cai e se monta conforme você rola a página.",
+    url: "https://braseiro-burguer.vercel.app/",
+    imagem: "assets/portfolio/braseiro.webp",
+    video: "assets/portfolio/braseiro.mp4"
+  },
+  {
     nome: "La Bella Donna",
     tipo: "Pizzaria · Tramandaí-RS",
     descricao: "Queijo esticando em câmera lenta: um site pra dar fome antes da primeira mordida.",
