@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agência BF | Sites Cinematográficos</title>
+  <meta name="description" content="Sites cinematográficos que impressionam no primeiro segundo e transformam visita em cliente. Veja o portfólio da Agência BF e agende uma reunião.">
+  <meta name="theme-color" content="#101014">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- Open Graph: troque "assets/og.jpg" por o endereço completo (https://seudominio.com.br/assets/og.jpg) ao publicar -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Agência BF">
+  <meta property="og:title" content="Agência BF | Sites Cinematográficos">
+  <meta property="og:description" content="Sites cinematográficos que impressionam no primeiro segundo e transformam visita em cliente. Veja o portfólio e agende uma reunião.">
+  <meta property="og:image" content="assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Moeda da Agência BF brilhando num telão de cinema">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Plus+Jakarta+Sans:wght@400;500;700&family=Unbounded:wght@800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/logo-bf.webp" type="image/webp">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    // Decide a abertura antes da primeira pintura (evita "piscar"). Tem trava de segurança.
+    (function () {
+      var d = document.documentElement;
+      try {
+        var reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduz && !sessionStorage.getItem('bf-intro')) {
+          d.classList.add('intro-on');
+          setTimeout(function () { d.classList.remove('intro-on'); }, 3000);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+<!-- Sprite de ícones (SVG, sem emoji) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-clap" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="13" width="25" height="15.5" rx="2.5"/><path d="M3.9 13l-1.1-5.6 24.6-4.6 1.1 5.6L3.9 13z"/><path d="M9.4 8.2l3.6 4.4M16.7 6.8l3.6 4.4M24 5.4l3 3.6"/></g></symbol>
+</svg>
+
+<div class="grain" aria-hidden="true"></div>
+
+<!-- 5.0 Abertura -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-beam"></div>
+  <p class="intro-text">Agência BF apresenta</p>
+  <img class="intro-coin" src="assets/logo-bf.webp" alt="" width="210" height="210">
+</div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-in"><span class="cursor-txt">Ver</span></span></div>
+
+<a class="skip" href="#portfolio">Pular para o portfólio</a>
+
+<!-- 5.1 Navegação -->
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#topo" aria-label="Agência BF, voltar ao topo">
+      <img src="assets/logo-bf.webp" alt="" width="40" height="40">
+      <span>Agência BF</span>
+    </a>
+    <nav class="nav-links" aria-label="Principal">
+      <a href="#portfolio">Portfólio</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#valores">Valores</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="https://wa.me/5551999871257?text=Oii%2C%20gostaria%20de%20agendar%20uma%20reuni%C3%A3o%20para%20falar%20sobre%20um%20site." target="_blank" rel="noopener noreferrer">Agendar reunião</a>
+  </div>
+</header>
+
+<main id="topo">
+
+  <!-- 5.2 Hero: a sala de cinema -->
+  <section class="hero" aria-labelledby="hero-titulo">
+    <div class="hero-stage">
+      <div class="beam" aria-hidden="true"><div class="beam-core"></div></div>
+      <canvas class="dust" aria-hidden="true"></canvas>
+      <div class="screen">
+        <div class="lb lb-top"></div>
+        <div class="screen-in">
+          <img class="screen-coin" src="assets/logo-bf.webp" alt="Moeda da Agência BF: um gato e o lema humanizando marcas" width="420" height="420" fetchpriority="high">
+        </div>
+        <div class="lb lb-bot"></div>
+        <div class="screen-sheen" aria-hidden="true"></div>
+      </div>
+      <svg class="seats" aria-hidden="true" focusable="false" viewBox="0 0 1440 190" preserveAspectRatio="xMidYMax slice"></svg>
+    </div>
+
+    <div class="wrap hero-copy">
+      <h1 id="hero-titulo" class="h-hero">Seu negócio merece um site que parece <em>estreia de cinema.</em></h1>
+      <p class="lead hero-text">A gente cria sites com imagem, movimento e história, feitos pra impressionar no primeiro segundo e transformar visita em cliente. Role a página e veja os que já estão no ar.</p>
+      <div class="btns hero-btns">
+        <a class="btn btn-primary" href="#portfolio">Ver os sites</a>
+        <a class="btn btn-ghost" href="https://wa.me/5551999871257?text=Oii%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener noreferrer"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>Falar no WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.3 Em cartaz -->
+  <section class="sec" id="portfolio" aria-labelledby="t-cartaz">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="eyebrow">Portfólio</p>
+        <h2 class="h-sec split" id="t-cartaz">Em cartaz
+          <svg class="scribble" viewBox="0 0 120 70" aria-hidden="true"><path d="M6 12c24 2 52 6 70 24 10 10 14 18 14 26M76 52l14 12 14-18" fill="none" stroke="#E83E91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </h2>
+        <p class="lead reveal">Sites que a BF já colocou no ar. Clique em qualquer um pra abrir e navegar como se fosse cliente.</p>
+      </header>
+
+      <div class="cards" id="cards">
+        <noscript>
+          <p class="lead">Ative o JavaScript para ver os prints. Enquanto isso, os sites no ar:</p>
+          <ul>
+            <li><a href="https://giltec.vercel.app/" target="_blank" rel="noopener noreferrer">Giltec Climatização</a></li>
+            <li><a href="https://querencia-churrascaria.vercel.app/" target="_blank" rel="noopener noreferrer">Churrascaria Querência</a></li>
+            <li><a href="https://johny-burguer.vercel.app/" target="_blank" rel="noopener noreferrer">Johny Burger</a></li>
+          </ul>
+        </noscript>
+
+        <!-- Último card fixo -->
+        <article class="card card-next" id="proxima">
+          <div class="next-art" aria-hidden="true">
+            <svg class="cat" viewBox="0 0 200 220">
+              <path fill="currentColor" fill-rule="evenodd" d="M34 18 82 66Q100 61 118 66L166 18Q178 70 173 114Q170 192 100 202 30 192 27 114 22 70 34 18ZM55 114a13 9.5 0 1 0 26 0 13 9.5 0 1 0-26 0ZM119 114a13 9.5 0 1 0 26 0 13 9.5 0 1 0-26 0ZM91 139h18l-9 11Z"/>
+              <path d="M70 150l-46-8M70 158l-44 10M130 150l46-8M130 158l44 10" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span class="next-mark">Sua marca aqui</span>
+          </div>
+          <div class="card-body">
+            <p class="card-tipo">Próxima estreia</p>
+            <h3 class="card-nome">O seu site pode ser o próximo</h3>
+            <p class="card-desc">Conta pra gente sobre o seu negócio e a gente mostra uma prévia antes de você fechar.</p>
+            <a class="btn btn-primary" href="https://wa.me/5551999871257?text=Oii%2C%20gostaria%20de%20agendar%20uma%20reuni%C3%A3o%20para%20falar%20sobre%20um%20site." target="_blank" rel="noopener noreferrer">Quero o meu<svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.4 Do roteiro à estreia -->
+  <section class="sec sec-atos" id="como-funciona" aria-labelledby="t-atos">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="eyebrow">Como funciona</p>
+        <h2 class="h-sec split" id="t-atos">Do roteiro <em>à estreia</em></h2>
+        <p class="lead reveal">Você não compra no escuro: antes de fechar, mostramos uma prévia de como o seu site vai ficar.</p>
+      </header>
+
+      <div class="atos-wrap">
+        <div class="reel" aria-hidden="true"><div class="reel-fill"></div></div>
+        <ol class="atos">
+          <li class="ato reveal">
+            <span class="ato-label">Ato 1</span>
+            <h3>Reunião</h3>
+            <p>Conversa rápida pra entender o seu negócio, seu público e o que o site precisa resolver.</p>
+          </li>
+          <li class="ato reveal">
+            <span class="ato-label">Ato 2</span>
+            <h3>Prévia</h3>
+            <p>Você vê como o site vai ficar antes de fechar. Gostou? Aí a gente segue.</p>
+          </li>
+          <li class="ato reveal">
+            <span class="ato-label">Ato 3</span>
+            <h3>Produção</h3>
+            <p>Fotos, textos, animações e cada detalhe pensado pra prender o olhar.</p>
+          </li>
+          <li class="ato reveal">
+            <span class="ato-label">Ato 4</span>
+            <h3>Estreia</h3>
+            <p>Site no ar, com domínio próprio, pronto pra divulgar no Instagram e no Google.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.5 Ingressos -->
+  <section class="sec" id="valores" aria-labelledby="t-ing">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="eyebrow">Valores</p>
+        <h2 class="h-sec split" id="t-ing">Ingressos</h2>
+        <p class="lead reveal">Valores de referência dos projetos do nosso portfólio, pra você ter uma ideia do investimento.</p>
+      </header>
+
+      <div class="tickets" id="tickets"></div>
+
+      <aside class="aviso reveal" aria-labelledby="aviso-t">
+        <svg class="aviso-ico" aria-hidden="true"><use href="#i-clap"/></svg>
+        <div class="aviso-txt">
+          <h3 id="aviso-t">Cada site é único, e o valor também.</h3>
+          <p>Os preços acima são de portfólio. O investimento final depende do que o seu negócio realmente precisa, por isso o primeiro passo é sempre uma reunião pra entender a sua necessidade e montar a proposta certa.</p>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/5551999871257?text=Oii%2C%20gostaria%20de%20agendar%20uma%20reuni%C3%A3o%20para%20falar%20sobre%20um%20site." target="_blank" rel="noopener noreferrer">Agendar reunião</a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 5.6 Contato -->
+  <section class="sec sec-contato" id="contato" aria-labelledby="t-contato">
+    <div class="wrap contato-grid">
+      <div class="contato-txt">
+        <h2 class="h-sec split" id="t-contato">Bora colocar a sua marca <em>no telão?</em></h2>
+        <p class="lead reveal">Chama a gente no WhatsApp pra marcar a reunião, ou vem ver os bastidores no Instagram.</p>
+        <div class="btns reveal">
+          <a class="btn btn-primary" href="https://wa.me/5551999871257?text=Oii%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener noreferrer"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp (51) 99987-1257</a>
+          <a class="btn btn-violet" href="https://www.instagram.com/agenciabfmkt/" target="_blank" rel="noopener noreferrer"><svg class="ico" aria-hidden="true"><use href="#i-ig"/></svg>@agenciabfmkt</a>
+        </div>
+      </div>
+      <div class="contato-coin" aria-hidden="true">
+        <img src="assets/logo-bf.webp" alt="" width="420" height="420" loading="lazy">
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 5.7 Rodapé -->
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p class="foot-brand"><strong>Agência BF</strong> · Humanizando marcas.</p>
+    <nav class="foot-links" aria-label="Redes">
+      <a href="https://www.instagram.com/agenciabfmkt/" target="_blank" rel="noopener noreferrer"><svg class="ico" aria-hidden="true"><use href="#i-ig"/></svg>Instagram</a>
+      <a href="https://wa.me/5551999871257?text=Oii%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener noreferrer"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
+    </nav>
+    <p class="foot-copy">© 2026 Agência BF</p>
+  </div>
+</footer>
+
+<!-- 5.8 Botão flutuante -->
+<a class="wa-float" href="https://wa.me/5551999871257?text=Oii%2C%20gostaria%20de%20saber%20mais%20sobre%20os%20sites." target="_blank" rel="noopener noreferrer" aria-label="Falar com a Agência BF no WhatsApp">
+  <svg aria-hidden="true"><use href="#i-wa"/></svg>
+</a>
+
+<script src="js/vendor/gsap.min.js" defer></script>
+<script src="js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="js/vendor/lenis.min.js" defer></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
