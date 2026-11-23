@@ -1,4 +1,4 @@
-﻿# Agência BF — Portfólio de sites cinematográficos
+# Agência BF — Portfólio de sites cinematográficos
 
 Site estático (HTML + CSS + JS puro) com GSAP, ScrollTrigger e Lenis (já incluídos em `js/vendor/`, sem CDN).
 
@@ -15,7 +15,8 @@ Abra http://localhost:8000. Para publicar, suba a pasta inteira na Vercel, Netli
 
 ## Como adicionar um novo site no portfólio
 
-1. Tire um print da página inicial do site novo (ou vários, empilhados na vertical, para o efeito de rolagem no hover). Largura ideal: 800px. Salve em `assets/portfolio/` como `.webp`.
+1. Tire prints do site novo, empilhados na vertical (largura 800px), e salve em `assets/portfolio/` como `.webp`. Esse é o print que aparece parado.
+   Para a **prévia em movimento** (aparece ao passar o mouse), grave o site rolando e salve um `.mp4` de 800x500 no mesmo lugar (`tools/gerar-previa.mjs` automatiza isso; mantenha o arquivo abaixo de ~2 MB).
 2. Abra `js/data.js` e acrescente um objeto na lista `sites`:
 
 ```js
@@ -24,11 +25,11 @@ Abra http://localhost:8000. Para publicar, suba a pasta inteira na Vercel, Netli
   tipo: "Tipo de negócio · Cidade-UF",
   descricao: "Uma frase curta sobre o site.",
   url: "https://link-do-site.com.br",
-  imagem: "assets/portfolio/nome-do-cliente.webp"
+  imagem: "assets/portfolio/nome-do-cliente.webp",`n  video: "assets/portfolio/nome-do-cliente.mp4"
 },
 ```
 
-Sem `url`, o botão vira "Link em breve". Sem `imagem`, aparece um placeholder roxo com o nome do cliente.
+Sem `url`, o botão vira "Link em breve". Sem `video`, o card rola o print no hover. Sem `imagem`, aparece um placeholder roxo com o nome do cliente.
 O card "Próxima estreia" fica sempre por último, automaticamente.
 
 ## Como alterar os valores (ingressos)

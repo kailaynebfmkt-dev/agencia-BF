@@ -28,13 +28,16 @@ function renderSites() {
     const tela = s.imagem
       ? `<img src="${esc(s.imagem)}" alt="Print da página inicial do site ${esc(s.nome)}" width="800" height="2500" loading="lazy" decoding="async">`
       : `<div class="shot-ph" aria-hidden="true">${esc(s.nome)}</div>`;
+    const video = s.video && s.imagem
+      ? `<video muted loop playsinline preload="none" data-src="${esc(s.video)}" aria-hidden="true" tabindex="-1"></video><span class="shot-hint" aria-hidden="true">Passe o mouse pra ver em movimento</span>`
+      : '';
     const botao = s.url
       ? `<a class="btn btn-primary" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">Ver o site ao vivo<svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only"> ${esc(s.nome)} (abre em nova aba)</span></a>`
       : `<span class="btn" role="link" aria-disabled="true">Link em breve</span>`;
     const moldura = `
       <div class="browser">
         <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="addr">${esc(dominio(s.url) || 'em breve')}</span></div>
-        <div class="shot">${tela}</div>
+        <div class="shot">${tela}${video}</div>
       </div>`;
     card.innerHTML = `
       ${s.url
@@ -164,6 +167,26 @@ function setupCardShots() {
   $$('.card-site').forEach((card) => {
     const shot = $('.shot', card); const img = $('.shot img', card);
     if (!img) return;
+    const vid = $('video', card);
+    if (vid) {
+      // prévia em vídeo: mostra os efeitos reais do site
+      if (reduce) { vid.remove(); $('.shot-hint', card)?.remove(); return; }
+      vid.addEventListener('error', () => { vid.remove(); $('.shot-hint', card)?.remove(); shot.classList.remove('is-playing'); });
+      const carregar = () => { if (!vid.src) { vid.src = vid.dataset.src; vid.preload = 'auto'; } };
+      const tocar = () => { carregar(); vid.classList.add('on'); shot.classList.add('is-playing'); vid.play()?.catch(() => {}); };
+      const parar = () => {
+        vid.classList.remove('on'); shot.classList.remove('is-playing');
+        setTimeout(() => { if (!vid.classList.contains('on')) { vid.pause(); try { vid.currentTime = 0; } catch {} } }, 450);
+      };
+      if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { if (e.isIntersecting) carregar(); }, { rootMargin: '400px' }).observe(card);
+      if (fine) {
+        card.addEventListener('mouseenter', tocar); card.addEventListener('mouseleave', parar);
+        card.addEventListener('focusin', tocar); card.addEventListener('focusout', parar);
+      } else if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => (e.isIntersecting ? tocar() : parar()), { threshold: .65 }).observe(card);
+      }
+      return;
+    }
     const dist = () => Math.max(0, img.offsetHeight - shot.clientHeight);
     const descer = () => {
       const d = dist(); if (!d) return;
