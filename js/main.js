@@ -1,9 +1,9 @@
-import { sites, planos } from './data.js';
+import { sites } from './data.js';
 
 /* =====================================================================
    Agência BF — Noite de Estreia
    Regras de ouro: o conteúdo é legível sem JS; as animações só melhoram.
-   Anima-se apenas transform/opacity (exceto o clip-path dos cards).
+   Anima-se apenas transform/opacity.
    ===================================================================== */
 
 const root = document.documentElement;
@@ -18,59 +18,91 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const dominio = (url) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; } };
 
-/* ---------- 1. Conteúdo vindo de data.js ---------- */
-function renderSites() {
-  const grid = $('#cards');
-  const proxima = $('#proxima');
-  sites.forEach((s, i) => {
-    const card = document.createElement('article');
-    card.className = 'card card-site';
-    const tela = s.imagem
-      ? `<img src="${esc(s.imagem)}" alt="Print da página inicial do site ${esc(s.nome)}" width="800" height="2500" loading="lazy" decoding="async">`
-      : `<div class="shot-ph" aria-hidden="true">${esc(s.nome)}</div>`;
-    const video = s.video && s.imagem
-      ? `<video muted loop playsinline preload="none" data-src="${esc(s.video)}" aria-hidden="true" tabindex="-1"></video><span class="shot-hint" aria-hidden="true">Passe o mouse pra ver em movimento</span>`
-      : '';
-    const botao = s.url
-      ? `<a class="btn btn-primary" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">Ver o site ao vivo<svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only"> ${esc(s.nome)} (abre em nova aba)</span></a>`
-      : `<span class="btn" role="link" aria-disabled="true">Link em breve</span>`;
-    const moldura = `
-      <div class="browser">
-        <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="addr">${esc(dominio(s.url) || 'em breve')}</span></div>
-        <div class="shot">${tela}${video}</div>
-      </div>`;
-    card.innerHTML = `
-      ${s.url
-        ? `<a class="card-link" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true" data-cursor>${moldura}</a>`
-        : `<div class="card-link" aria-hidden="true">${moldura}</div>`}
-      <div class="card-body">
-        <p class="card-tipo">${esc(s.tipo)}</p>
-        <h3 class="card-nome">${esc(s.nome)}</h3>
-        <p class="card-desc">${esc(s.descricao)}</p>
-        ${botao}
-      </div>`;
-    grid.insertBefore(card, proxima);
+/* ---------- 1. Nível 2: sites ao vivo, um de cada vez ---------- */
+function setupAoVivo() {
+  const caixa = $('#vivo'); const seletor = $('#seletor');
+  if (!caixa || !seletor || !sites.length) return;
+  const capa = $('#vivo-capa'); const sair = $('#vivo-sair');
+  let atual = 0, visivelPerto = false, midia = null;
+
+  seletor.innerHTML = sites.map((s, i) => `
+    <button type="button" data-i="${i}" aria-pressed="${i === 0}">
+      ${s.imagem ? `<img src="${esc(s.imagem)}" alt="" width="800" height="500" loading="lazy" decoding="async">` : ''}
+      <span>${esc(s.nome)}</span>
+    </button>`).join('');
+
+  // Em caixas largas o site é aberto como num computador (1366px) e reduzido; no celular, como celular.
+  const ajustar = () => {
+    if (!midia || midia.tagName !== 'IFRAME') return;
+    const w = caixa.clientWidth, h = caixa.clientHeight;
+    const virtual = w >= 560 ? Math.max(1366, w) : Math.max(390, w);
+    const escala = w / virtual;
+    midia.style.width = `${virtual}px`;
+    midia.style.height = `${Math.ceil(h / escala)}px`;
+    midia.style.transform = `scale(${escala})`;
+  };
+
+  const liberar = () => { caixa.classList.add('is-ativo'); sair.hidden = false; $('.cursor')?.classList.remove('is-on'); midia?.focus({ preventScroll: true }); };
+  const travar = () => { caixa.classList.remove('is-ativo'); sair.hidden = true; };
+
+  // só o site selecionado é carregado
+  const carregar = () => {
+    midia?.remove(); midia = null;
+    const s = sites[atual];
+    if (s.bloqueiaIframe && s.video) {
+      midia = Object.assign(document.createElement('video'), { src: s.video, muted: true, loop: true, controls: true, autoplay: !reduce, playsInline: true });
+      caixa.classList.add('sem-capa');
+    } else {
+      midia = document.createElement('iframe');
+      midia.title = `Site ${s.nome} ao vivo`;
+      midia.allow = 'autoplay; fullscreen';
+      midia.src = s.url;
+      caixa.classList.remove('sem-capa');
+    }
+    caixa.insertBefore(midia, capa);
+    ajustar();
+  };
+
+  const mostrarTexto = () => {
+    const s = sites[atual];
+    $('#vivo-addr').textContent = dominio(s.url);
+    $('#vivo-abrir').href = s.url;
+    $('#vivo-desc').textContent = `${s.tipo}. ${s.descricao}`;
+    $$('button', seletor).forEach((b, i) => b.setAttribute('aria-pressed', String(i === atual)));
+  };
+
+  seletor.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || +b.dataset.i === atual) return;
+    atual = +b.dataset.i; travar(); mostrarTexto();
+    if (visivelPerto) carregar();
   });
+  capa.addEventListener('click', liberar);
+  sair.addEventListener('click', travar);
+  // tirar o mouse da prévia devolve a rolagem para a página
+  caixa.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') travar(); });
+  new ResizeObserver(ajustar).observe(caixa);
+
+  mostrarTexto();
+  if (!('IntersectionObserver' in window)) { visivelPerto = true; carregar(); return; }
+  // carrega quando a seção se aproxima e libera a memória quando fica longe
+  new IntersectionObserver(([e]) => {
+    visivelPerto = e.isIntersecting;
+    if (visivelPerto && !midia) carregar();
+    else if (!visivelPerto && midia) { travar(); midia.remove(); midia = null; }
+  }, { rootMargin: '500px 0px' }).observe(caixa);
 }
 
-function renderPlanos() {
-  const box = $('#tickets');
-  box.innerHTML = planos.map((p, i) => `
-    <article class="ticket${p.destaque ? ' is-featured' : ''}">
-      <div class="t-top">
-        ${p.destaque ? '<span class="t-badge">Mais pedido</span>' : ''}
-        <p class="t-cat">${esc(p.categoria)}</p>
-        <h3 class="t-name">${esc(p.nome)}</h3>
-        <p class="t-ref">Valor de referência</p>
-        <p class="t-price">${esc(p.valor)}</p>
-        <p class="t-resume">${esc(p.resumo)}</p>
-      </div>
-      <div class="t-bottom">
-        <p class="t-inc">O que inclui</p>
-        <ul class="t-list">${p.itens.map((it) => `<li><svg aria-hidden="true"><use href="#i-check"/></svg><span>${esc(it)}</span></li>`).join('')}</ul>
-        <div class="t-foot"><span class="barcode" aria-hidden="true"></span><span class="t-num">Nº ${String(i + 1).padStart(3, '0')}</span></div>
-      </div>
-    </article>`).join('');
+/* ---------- Nível 3: vídeo toca sozinho quando aparece ---------- */
+function setupVideoPortal() {
+  const v = $('#video-portal'); if (!v || reduce || !('IntersectionObserver' in window)) return;
+  v.muted = true;
+  let pausadoPeloUsuario = false, pausandoSozinho = false;
+  v.addEventListener('pause', () => { if (!pausandoSozinho) pausadoPeloUsuario = true; pausandoSozinho = false; });
+  v.addEventListener('play', () => { pausadoPeloUsuario = false; });
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) { if (!pausadoPeloUsuario) v.play()?.catch(() => {}); }
+    else if (!v.paused && !document.fullscreenElement) { pausandoSozinho = true; v.pause(); }
+  }, { threshold: .25 }).observe(v);
 }
 
 /* poltronas (SVG decorativo) */
@@ -163,70 +195,14 @@ function setupDust() {
   }).observe($('.hero'));
 }
 
-function setupCardShots() {
-  $$('.card-site').forEach((card) => {
-    const shot = $('.shot', card); const img = $('.shot img', card);
-    if (!img) return;
-    const vid = $('video', card);
-    if (vid) {
-      // prévia em vídeo: mostra os efeitos reais do site
-      if (reduce) { vid.remove(); $('.shot-hint', card)?.remove(); return; }
-      vid.addEventListener('error', () => { vid.remove(); $('.shot-hint', card)?.remove(); shot.classList.remove('is-playing'); });
-      const carregar = () => { if (!vid.src) { vid.src = vid.dataset.src; vid.preload = 'auto'; } };
-      const tocar = () => { carregar(); vid.classList.add('on'); shot.classList.add('is-playing'); vid.play()?.catch(() => {}); };
-      const parar = () => {
-        vid.classList.remove('on'); shot.classList.remove('is-playing');
-        setTimeout(() => { if (!vid.classList.contains('on')) { vid.pause(); try { vid.currentTime = 0; } catch {} } }, 450);
-      };
-      if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { if (e.isIntersecting) carregar(); }, { rootMargin: '400px' }).observe(card);
-      if (fine) {
-        card.addEventListener('mouseenter', tocar); card.addEventListener('mouseleave', parar);
-        card.addEventListener('focusin', tocar); card.addEventListener('focusout', parar);
-      } else if ('IntersectionObserver' in window) {
-        new IntersectionObserver(([e]) => (e.isIntersecting ? tocar() : parar()), { threshold: .65 }).observe(card);
-      }
-      return;
-    }
-    const dist = () => Math.max(0, img.offsetHeight - shot.clientHeight);
-    const descer = () => {
-      const d = dist(); if (!d) return;
-      img.style.transition = `transform ${Math.max(3, d / 130)}s cubic-bezier(.45,.05,.4,1)`;
-      img.style.transform = `translate3d(0,-${d}px,0)`;
-    };
-    const subir = () => { img.style.transition = 'transform 1.1s cubic-bezier(.16,1,.3,1)'; img.style.transform = 'translate3d(0,0,0)'; };
-    if (reduce) return;
-    if (fine) {
-      card.addEventListener('mouseenter', descer); card.addEventListener('mouseleave', subir);
-      card.addEventListener('focusin', descer); card.addEventListener('focusout', subir);
-    } else if ('IntersectionObserver' in window) {
-      // celular: sem hover, então o print rola sozinho quando o card aparece
-      new IntersectionObserver(([e]) => (e.isIntersecting ? descer() : subir()), { threshold: .65 }).observe(card);
-    }
-  });
-}
-
 function setupCursor() {
   const cur = $('.cursor'); if (!cur || !fine || reduce || !temGsap) return;
   const qx = gsap.quickTo(cur, 'x', { duration: .45, ease: 'power3.out' });
   const qy = gsap.quickTo(cur, 'y', { duration: .45, ease: 'power3.out' });
   addEventListener('pointermove', (e) => { cur.classList.add('is-on'); qx(e.clientX); qy(e.clientY); }, { passive: true });
   document.addEventListener('mouseleave', () => cur.classList.remove('is-on'));
-  document.addEventListener('pointerover', (e) => { cur.classList.toggle('is-view', !!e.target.closest('[data-cursor]')); });
-}
-
-function setupTilt() {
-  if (!fine || reduce || !temGsap) return;
-  $$('.ticket').forEach((t) => {
-    gsap.set(t, { transformPerspective: 900 });
-    const rx = gsap.quickTo(t, 'rotationX', { duration: .6, ease: 'power3.out' });
-    const ry = gsap.quickTo(t, 'rotationY', { duration: .6, ease: 'power3.out' });
-    t.addEventListener('pointermove', (e) => {
-      const r = t.getBoundingClientRect();
-      ry(((e.clientX - r.left) / r.width - .5) * 9);
-      rx(-((e.clientY - r.top) / r.height - .5) * 9);
-    });
-    t.addEventListener('pointerleave', () => { rx(0); ry(0); });
-  });
+  // sobre o site ao vivo o ponteiro é do próprio iframe: esconde o cursor da página
+  document.addEventListener('pointerover', (e) => { if (e.target.tagName === 'IFRAME') cur.classList.remove('is-on'); });
 }
 
 /* ---------- 4. Abertura ---------- */
@@ -301,19 +277,22 @@ function animar(depoisDaAbertura) {
     gsap.from(el, { opacity: 0, y: reduce ? 0 : 26, duration: reduce ? .6 : .9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
   });
 
-  // Cards: "corte de cena" (clip-path de baixo para cima)
-  const cards = $$('.cards .card');
-  if (reduce) {
-    gsap.from(cards, { opacity: 0, duration: .6, stagger: .08, scrollTrigger: { trigger: '#cards', start: 'top 85%', once: true } });
-  } else {
-    gsap.set(cards, { clipPath: 'inset(100% 0% 0% 0%)' });
-    ScrollTrigger.batch(cards, {
-      start: 'top 90%', once: true,
-      onEnter: (els) => gsap.fromTo(els,
-        { clipPath: 'inset(100% 0% 0% 0%)', y: 30 },
-        { clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 1.1, ease: 'expo.out', stagger: .14, clearProps: 'clipPath,y' }),
+  // Níveis: a prévia entra pelo lado dela e os benefícios aparecem em sequência.
+  // clearProps no final: nenhum transform fica sobrando em volta do iframe.
+  const mmNiveis = gsap.matchMedia();
+  mmNiveis.add({ largo: '(min-width: 1000px)', estreito: '(max-width: 999px)' }, (ctx) => {
+    $$('.nivel').forEach((sec, i) => {
+      const gatilho = { trigger: sec, start: 'top 72%', once: true };
+      const lado = ctx.conditions.largo ? (i === 1 ? 70 : -70) : 0;
+      gsap.from($('.nivel-previa', sec), { opacity: 0, x: reduce ? 0 : lado, duration: reduce ? .6 : 1.1, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: gatilho });
+      gsap.from($$('.nivel-info > *:not(.beneficios), .beneficios li', sec), { opacity: 0, y: reduce ? 0 : 18, duration: .7, ease: 'power3.out', stagger: .05, clearProps: 'transform,opacity', scrollTrigger: { trigger: $('.nivel-info', sec), start: 'top 80%', once: true } });
     });
-  }
+  });
+
+  // Linha de progressão entre os níveis
+  if (!reduce) $$('.elo-linha i').forEach((l) => {
+    gsap.fromTo(l, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: l.parentElement, start: 'top 85%', end: 'bottom 50%', scrub: true } });
+  });
 
   // Rolo de filme que se preenche
   const fill = $('.reel-fill');
@@ -329,32 +308,24 @@ function animar(depoisDaAbertura) {
     });
   }
 
-  // Ingressos
-  if (!reduce) {
-    gsap.from('.ticket', { opacity: 0, y: 50, duration: 1, ease: 'expo.out', stagger: .14, scrollTrigger: { trigger: '#tickets', start: 'top 85%', once: true } });
-  } else {
-    gsap.from('.ticket', { opacity: 0, duration: .6, scrollTrigger: { trigger: '#tickets', start: 'top 88%', once: true } });
-  }
-
   // recalcula depois que fontes/imagens carregam
   addEventListener('load', () => ScrollTrigger.refresh());
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
 }
 
 /* ---------- Início ---------- */
-renderSites();
-renderPlanos();
+setupAoVivo();
+setupVideoPortal();
 renderSeats();
 setupNav();
 setupWhatsFloat();
-setupCardShots();
 
 if (temGsap) {
   const veioIntro = root.classList.contains('intro-on');
   abertura().then(() => {});
   animar(veioIntro);
   // o hero espera a abertura (a abertura cobre a tela, então a animação roda por baixo)
-  setupDust(); setupCursor(); setupTilt();
+  setupDust(); setupCursor();
 } else {
   // sem GSAP: tudo já está visível e funcional
   $('#intro')?.remove(); root.classList.remove('intro-on');

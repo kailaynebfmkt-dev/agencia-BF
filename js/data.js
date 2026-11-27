@@ -1,8 +1,9 @@
 // =====================================================================
-//  DADOS DO SITE — edite aqui, sem mexer no HTML.
+//  SITES DO NÍVEL 2 (prévia ao vivo) — edite aqui, sem mexer no HTML.
 //  Para adicionar um site novo: copie um objeto da lista `sites` e
-//  preencha os campos. Para mudar valores: edite a lista `planos`.
-//  Detalhes no README.md
+//  preencha os campos. Textos e valores dos 3 níveis ficam no index.html.
+//  Se um site bloquear iframe, adicione `bloqueiaIframe: true` para
+//  mostrar o vídeo no lugar. Detalhes no README.md
 // =====================================================================
 
 export const sites = [
@@ -42,35 +43,10 @@ export const sites = [
     nome: "La Bella Donna",
     tipo: "Pizzaria · Tramandaí-RS",
     descricao: "Queijo esticando em câmera lenta: um site pra dar fome antes da primeira mordida.",
-    url: "https://labelladonna-pizzaria-96bnod02d-kailaynebfmkt-7218s-projects.vercel.app/",
+    url: "https://labelladonna-pizzaria.vercel.app/",
     imagem: "assets/portfolio/la-bella-donna.webp",
     video: "assets/portfolio/la-bella-donna.mp4"
   }
   // Modelo para o próximo site (descomente e preencha):
   // { nome: "", tipo: "Tipo de negócio · Cidade-UF", descricao: "", url: "", imagem: "assets/portfolio/nome.webp", video: "assets/portfolio/nome.mp4" },
-];
-
-export const planos = [
-  {
-    categoria: "Entrada · Site institucional",
-    nome: "Site que vende",
-    valor: "R$ 1.497 a R$ 2.497",
-    resumo: "Presença digital e apresentação profissional da sua empresa.",
-    itens: ["Apresentação profissional", "Seus serviços", "Fotos do negócio", "Localização", "Botão de WhatsApp"]
-  },
-  {
-    categoria: "Mais comercial · Sistema interativo",
-    nome: "Cardápio que vende",
-    valor: "R$ 3.497 a R$ 5.497",
-    destaque: true,
-    resumo: "Catálogo online em que o cliente monta o pedido sozinho.",
-    itens: ["Cardápio ou catálogo", "Categorias e produtos", "Carrinho de compras", "Pedidos direto no WhatsApp"]
-  },
-  {
-    categoria: "Avançado · Sistema personalizado",
-    nome: "Sistema que administra",
-    valor: "R$ 6.000 a R$ 12.000+",
-    resumo: "Você no controle de tudo, com um painel feito sob medida.",
-    itens: ["Painel administrativo", "Gestão de produtos, categorias e preços", "Gestão de pedidos", "Integrações e funções específicas"]
-  }
 ];

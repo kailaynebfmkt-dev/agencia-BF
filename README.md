@@ -13,11 +13,20 @@ python -m http.server 8000
 
 Abra http://localhost:8000. Para publicar, suba a pasta inteira na Vercel, Netlify ou Hostinger (não há build).
 
-## Como adicionar um novo site no portfólio
+## Os 3 níveis
 
-1. Tire prints do site novo, empilhados na vertical (largura 800px), e salve em `assets/portfolio/` como `.webp`. Esse é o print que aparece parado.
-   Para a **prévia em movimento** (aparece ao passar o mouse), grave o site rolando e salve um `.mp4` de 800x500 no mesmo lugar (`tools/gerar-previa.mjs` automatiza isso; mantenha o arquivo abaixo de ~2 MB).
-2. Abra `js/data.js` e acrescente um objeto na lista `sites`:
+A página mostra Nível 1 (Essencial, R$ 1.500), Nível 2 (Cinematográfico, R$ 3.500) e Nível 3 (Sistema Web, R$ 6.000).
+Textos, benefícios, valores e mensagens de WhatsApp de cada nível ficam no `index.html` (assim o Google lê e funciona sem JavaScript).
+Ao mudar um valor, altere também o bloco `mapa`, no começo da seção.
+
+- **Nível 1:** a prévia é a imagem `assets/niveis/essencial-referencia.jpg`.
+- **Nível 2:** sites reais em iframe; só o selecionado é carregado.
+- **Nível 3:** vídeo `assets/niveis/portal-bf.mp4` (recorte da tela, sem áudio) e capa `portal-bf-poster.webp`.
+
+## Como adicionar um novo site no Nível 2
+
+1. Salve um print do site em `assets/portfolio/nome.webp` (vira a miniatura do botão).
+2. Em `js/data.js`, acrescente um objeto na lista `sites`:
 
 ```js
 {
@@ -25,17 +34,12 @@ Abra http://localhost:8000. Para publicar, suba a pasta inteira na Vercel, Netli
   tipo: "Tipo de negócio · Cidade-UF",
   descricao: "Uma frase curta sobre o site.",
   url: "https://link-do-site.com.br",
-  imagem: "assets/portfolio/nome-do-cliente.webp",`n  video: "assets/portfolio/nome-do-cliente.mp4"
+  imagem: "assets/portfolio/nome-do-cliente.webp",
+  video: "assets/portfolio/nome-do-cliente.mp4"
 },
 ```
 
-Sem `url`, o botão vira "Link em breve". Sem `video`, o card rola o print no hover. Sem `imagem`, aparece um placeholder roxo com o nome do cliente.
-O card "Próxima estreia" fica sempre por último, automaticamente.
-
-## Como alterar os valores (ingressos)
-
-Em `js/data.js`, edite a lista `planos` (`categoria`, `nome`, `valor`, `resumo`, `itens`).
-O plano com `destaque: true` vira o ingresso amarelo "Mais pedido" (use em apenas um).
+O `video` só é usado se o site bloquear iframe: marque `bloqueiaIframe: true` (o navegador não avisa a página sobre o bloqueio, então teste ao adicionar). `tools/gerar-previa.mjs` ajuda a gravar.
 
 ## Links (WhatsApp e Instagram)
 
@@ -52,11 +56,11 @@ Estão direto no `index.html` (assim funcionam mesmo sem JavaScript). Para troca
 index.html
 assets/        logo (moeda), favicon, og.jpg e prints em portfolio/
 css/style.css
-js/data.js     sites e valores (edite aqui)
+js/data.js     sites do Nível 2 (edite aqui)
 js/main.js     animações e renderização
 js/vendor/     gsap, ScrollTrigger e lenis
 ```
 
 ## Acessibilidade e movimento
 
-Com `prefers-reduced-motion: reduce` ficam desligados: abertura, Lenis, parallax, grão animado, poeira, tilt dos ingressos e cursor. Só restam fades simples.
+Com `prefers-reduced-motion: reduce` ficam desligados: abertura, Lenis, parallax, grão animado, poeira, cursor e o início automático do vídeo do Nível 3. Só restam fades simples.
